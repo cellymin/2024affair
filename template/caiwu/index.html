@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>无锡力支管理系统-财务流水账</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- basic styles -->
+    <link href="{$Think.const.CSS_URL}/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="http://cdn.bootcss.com/font-awesome/3.2.1/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{$Think.const.CSS_URL}/ace.min.css"/>
+    <link rel="stylesheet" href="{$Think.const.CSS_URL}/ace-rtl.min.css"/>
+    <link rel="stylesheet" href="{$Think.const.CSS_URL}/ace-skins.min.css"/>
+    <link rel="stylesheet" href="{$Think.const.CSS_URL}/datepicker.css"/>
+    <!-- ace settings handler -->
+    <script src="{$Think.const.JS_URL}/ace-extra.min.js"></script>
+    <script src="{$Think.const.JS_URL}/jquery-1.11.3.min.js"></script>
+    <script src="{$Think.const.JS_URL}/layer/layer.js"></script>
+
+</head>
+<style>
+    .left_form {
+        clear: both;
+        width: 45%;
+        float: left;
+        padding-right: 2%;
+    }
+
+    .iconfont {
+        font-family: "iconfont" !important;
+        font-size: 14px;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -webkit-text-stroke-width: 0.1px;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    @font-face {
+        font-family: 'iconfont';  /* project id 987132 */
+        src: url('//at.alicdn.com/t/font_987132_huga9t6yr1s.eot');
+        src: url('//at.alicdn.com/t/font_987132_huga9t6yr1s.eot?#iefix') format('embedded-opentype'),
+        url('//at.alicdn.com/t/font_987132_huga9t6yr1s.woff2') format('woff2'),
+        url('//at.alicdn.com/t/font_987132_huga9t6yr1s.woff') format('woff'),
+        url('//at.alicdn.com/t/font_987132_huga9t6yr1s.ttf') format('truetype'),
+        url('//at.alicdn.com/t/font_987132_huga9t6yr1s.svg#iconfont') format('svg');
+    }
+
+
+    .add_div {
+        width: 400px;
+        height: 500px;
+        border: solid #ccc 1px;
+        margin-top: 40px;
+        margin-left: 170px;
+        padding-left: 20px;
+    }
+
+    .file-list {
+        margin-top: 15px;
+        height: 80px;
+        display: none;
+        list-style-type: none;
+        padding-left: 0px;
+    }
+
+    .file-list img {
+        max-width: 70px;
+        vertical-align: middle;
+    }
+
+    .file-item {
+        float: left;
+        border: solid red px;
+        margin: 5px 10px;
+    }
+
+
+    .add {
+        border: solid #ccc 1px;
+        border-radius: 5px;
+        width: 45px;
+        background-color: #ccc;
+        display: inline-block;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .file-del {
+        float: right;
+        margin-top: -9px;
+        margin-left: -2px;
+        cursor: pointer;
+        font-size: 12px;
+        z-index: 100;
+        position: absolute;
+    }
+</style>
+<script>
+
+    function changeshuijin() {
+        //税率
+        var rate = Number($('.rate').val());
+        var shuijin = 0;
+        if (rate != '' && rate != null && rate != undefined) {
+            if (rate >= 1) {
+                layer.msg('税率不能大于1！')
+            }
+        }
+        //销售价格
+        var total_money = $("input[name='total_money']").val();
+        var hanshui = parseInt($('.if_hanshui').val());
+        var strhanshui = '';
+
+        if (hanshui == 1 && Number(total_money) > 0) {
+            //含税
+            $("input[name='rate_money']").val('');
+            $("input[name='rate_money']").attr('rate4', '');
+            shuijin = total_money / (1 + rate) * rate;
+            strhanshui = '' + shuijin + '';
+            var rate4 = strhanshui.substring(0, (strhanshui.indexOf(".") + 6));
+            $("input[name='rate_money']").val(shuijin.toFixed(2));
+            $("input[name='rate_money']").attr('rate4', rate4);
+        }
+    }
+
+</script>
+<body>
+{include file="template/nav.html"}
+<div class="main-container" id="main-container">
+    <script type="text/javascript">
+        try {
+            ace.settings.check('main-container', 'fixed')
+        } catch (e) {
+        }
+    </script>
+    <div class="main-container-inner">
+        <a class="menu-toggler" id="menu-toggler" href="#">
+            <span class="menu-text"></span>
+        </a>
+        {include file="template/sidebar.html"}
+        <div class="main-content">
+            {include file="template/head.html"}
+            <div class="page-content" style="padding-bottom: 0px;">
+                <div class="page-header">
+                    <h1>
+                        <small>
+                            管理流水账
+                        </small>
+                    </h1>
+                </div><!-- /.page-header -->
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="widget-box">
+                                    <div class="widget-header">
+                                        <h4>编辑流水账</h4>
+                                        <span class="widget-toolbar">
+														<a href="#" data-action="reload">
+															<i class="icon-refresh"></i>
+														</a>
+														<a href="#" data-action="collapse">
+															<i class="icon-chevron-up"></i>
+														</a>
+													</span>
+                                    </div>
+                                    <div class="widget-body">
+                                        <div class="widget-main">
+                                            <div class="form-group left_form">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">类型</span>
+                                                    <select class="form-control input-xlarge rate"
+                                                            name="rate" type="text" onchange="changeshuijin();">
+                                                        <option value="0.13">进项</option>
+                                                        <option value="0.16">销项</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input class="form-control date-picker" id="id-date-picker-1"
+                                                           placeholder="日期" type="text" name="create_time"
+                                                           data-date-format="yyyy-mm-dd">
+                                                    <span class="input-group-addon">
+																		<i class="icon-calendar bigger-110"></i>
+																	</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group left_form">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">子类型</span>
+                                                    <select class="form-control input-xlarge rate"
+                                                            name="rate" type="text" onchange="changeshuijin();">
+                                                        <option value="1">全款</option>
+                                                        <option value="2">预付款</option>
+                                                        <option value="3">尾款</option>
+                                                        <option value="4">验收款</option>
+                                                        <option value="5">货款</option>
+                                                        <option value="6">工资</option>
+                                                        <option value="7">展会</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                     <span class="input-group-addon">
+																	金额
+																</span>
+                                                    <input class="form-control input-xlarge" name="total_money"
+                                                           type="text" onchange="changeshuijin();"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group left_form">
+                                                <div class="input-group">
+                                                     <span class="input-group-addon">
+																	是否结清
+																</span>
+                                                    <select class="form-control input-xlarge if_hanshui" type="text">
+                                                        <option value="1">是</option>
+                                                        <option value="2">否</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">是否含税</span>
+                                                    <select class="form-control input-xlarge rate"
+                                                            name="rate" type="text" onchange="changeshuijin();">
+                                                        <option value="1">含税</option>
+                                                        <option value="2">不含税</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group left_form">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">货物状态</span>
+                                                    <select class="form-control input-xlarge product_status"
+                                                            name="rate" type="text">
+                                                        <option value="1">未发货</option>
+                                                        <option value="2">已发货</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group" style="    margin-top: 15px;">
+                                                    <span class="input-group-addon">发票状态</span>
+                                                    <select class="form-control input-xlarge invoice_status"
+                                                            name="invoice_status" type="text">
+                                                        <option value="1">未开票</option>
+                                                        <option value="2">已开票</option>
+                                                        <option value="3">已邮寄</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group left_form">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+																	公司名称
+																</span>
+                                                    <input class="form-control input-mask-date" name="rate_money"
+                                                           rate4="" type="text" />
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+																	备注
+																</span>
+                                                    <input class="form-control input-mask-date" name="rate_money"
+                                                           rate4="" type="text"  />
+                                                </div>
+
+                                            </div>
+                                            <div class="clearfix form-actions">
+                                                <div class="col-md-offset-3 col-md-9" style="    margin-left: 40%;">
+                                                    <button class="btn btn-info subtijiao" type="button" xsid=""
+                                                            onclick="confirmadd(this);">
+                                                        <i class="icon-ok bigger-110"></i>
+                                                        提交
+                                                    </button>
+                                                    &nbsp; &nbsp; &nbsp;
+                                                    <button class="btn" type="reset" onclick="resetsubmit();">
+                                                        <i class="icon-undo bigger-110"></i>
+                                                        重置
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /span -->
+                        </div><!-- /row -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+            <div class="page-content">
+                <div class="page-header">
+                    <h1>
+                        <small>
+                            销售列表
+                        </small>
+                    </h1>
+                </div><!-- /.page-header -->
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="table-responsive">
+                                    <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th class="center">
+                                                <label>
+                                                    <input type="checkbox" class="ace"/>
+                                                    <span class="lbl"></span>
+                                                </label>
+                                            </th>
+                                            <th>公司</th>
+                                            <th>产品</th>
+                                            <th>日期</th>
+                                            <th>销售金额</th>
+                                            <th class="hidden-480">税率</th>
+                                            <th class="hidden-480">税金</th>
+                                            <th>欠款</th>
+                                            <th>收货状态</th>
+                                            <th>发票状态</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {foreach $xiaoshoulist as $k }
+                                        <tr>
+                                            <td class="center">
+                                                <label>
+                                                    <input type="checkbox" class="ace"/>
+                                                    <span class="lbl"></span>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <a href="#">{$k.company_name}</a>
+                                            </td>
+                                            <td><a href="#">{$k.product_name}</a></td>
+                                            <td>{$k.create_time|substr=0,10}</td>
+                                            <td>{$k.total_money}</td>
+                                            <td class="hidden-480">
+                                                {$k.rate}
+                                            </td>
+                                            <td class="hidden-480">{$k.rate_money}</td>
+                                            <td class="hidden-480">{$k.owe}</td>
+                                            <td class="hidden-480">
+                                                {if condition="(!empty($k.product_status) &&
+                                                $k.product_status==1)"}未发货{else /}已发货{/if}
+                                            </td>
+                                            <td class="hidden-480">
+                                                {if condition="(!empty($k.invoice_status) &&
+                                                $k.invoice_status==1)"}未开票{elseif condition="(!empty($k.invoice_status)
+                                                && $k.invoice_status==2)" /}已开票{else /}已邮寄{/if}
+                                            </td>
+                                            <td>
+                                                <div class="visible-md visible-lg hidden-sm hidden-xs btn-group"
+                                                     attrid="{$k.xiaoshou_id}">
+                                                    <button class="btn btn-xs btn-warning" onclick="fahuo(this)">
+                                                        <i class="icon-flag bigger-120"></i>
+                                                    </button>
+                                                    <button class="btn btn-xs btn-success" onclick="fapiao(this)">
+                                                        <i class="icon-ok bigger-120"></i>
+                                                    </button>
+                                                    <button class="btn btn-xs btn-info">
+                                                        <i class="icon-edit bigger-120"></i>
+                                                    </button>
+                                                    <button class="btn btn-xs btn-danger">
+                                                        <i class="icon-trash bigger-120"></i>
+                                                    </button>
+
+                                                </div>
+                                                <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                                    <div class="inline position-relative">
+                                                        <button class="btn btn-minier btn-primary dropdown-toggle"
+                                                                data-toggle="dropdown">
+                                                            <i class="icon-cog icon-only bigger-110"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
+                                                            <li>
+                                                                <a href="#" class="tooltip-info" data-rel="tooltip"
+                                                                   title="View">
+																				<span class="blue">
+																					<i class="icon-zoom-in bigger-120"></i>
+																				</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" class="tooltip-success" data-rel="tooltip"
+                                                                   title="Edit">
+																				<span class="green">
+																					<i class="icon-edit bigger-120"></i>
+																				</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" class="tooltip-error" data-rel="tooltip"
+                                                                   title="Delete">
+																				<span class="red">
+																					<i class="icon-trash bigger-120"></i>
+																				</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {/foreach}
+
+                                        </tbody>
+                                    </table>
+                                </div><!-- /.table-responsive -->
+                            </div><!-- /span -->
+                        </div><!-- /row -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div><!-- /.main-content -->
+    </div><!-- /.main-container-inner -->
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+        <i class="icon-double-angle-up icon-only bigger-110"></i>
+    </a>
+</div><!-- /.main-container -->
+<div class="layui-layer-shade" style="z-index:19891019; background:url({$Think.const.IMG_URL}/kong.png); display:none;"
+     id="fahuotijiao">
+    <div class="layui-layer layui-anim layui-layer-page layer-ext-moon"
+         style="overflow: hidden;z-index: 19891020; width:350px; height:360px; left:50%; margin-left:-155px;">
+        <div class="layui-layer-title" style="cursor: move;">发货</div>
+        <div class="layui-layer-content" style="overflow: hidden">
+            <div class="animated">
+                <form action="" method="post" class="form-horizontal">
+                    <div class="ibox float-e-margins" style="margin-bottom:0px;margin-left: 3px;margin-right: 3px">
+                        <div class="ibox-content">
+
+                            <div class="input-group m-b" style="margin-bottom:5px;">
+                                <span class="input-group-addon">发货时间：</span>
+                                <input type="text" name="beizhu" class="form-control" id="fuzhi1" multiple="multiple"
+                                       style="" value=""/>
+                            </div>
+                            <div class="input-group m-b" style="margin-bottom:5px;">
+                                <span class="input-group-addon">发货方式：</span>
+                                <select class="form-control" name="fangshi" type="text" id="cxfpke" value="">
+                                    <option value="1">汽运</option>
+                                    <option value="2">物流</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group m-b" style="margin-bottom:5px;">
+                                <span class="input-group-addon">备注：</span>
+                                <input type="text" name="beizhu" class="form-control" id="fuzhi3" multiple="multiple"
+                                       style="" value=""/>
+                            </div>
+                            <div class="input-group m-b" style="margin-bottom:5px;">
+                                <span class="input-group-addon">图片：</span>
+                                <span class="input-group-addon add choose">添加</span>
+                                <input type="file" name="" id="choose-file" multiple="multiple"
+                                       style="opacity: 0;display: none"/>
+                                <!--<input type="file" name="" id="choose-file" />-->
+                            </div>
+                            <div class="input-group " style="margin-bottom:5px;">
+                                <ul class="file-list ">
+
+                                </ul>
+                            </div>
+                            <div class="form-group" align="center" style="margin-bottom:5px;">
+                                <p style="background: #29b578; width: 9rem; height: 3rem; line-height: 3rem; color: #fff;  letter-spacing: 1px;margin-top: 1rem;">
+                                    <sapn style="cursor: pointer;" class="subapply" zid="" id="upload">确认发货</sapn>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <span class="layui-layer-setwin" id="fahuotijiaoxx"><a
+                class="layui-layer-ico layui-layer-close layui-layer-close1"
+                href="javascript:;"></a></span>
+    </div>
+</div>
+<!-- basic scripts -->
+<div class="layui-layer-shade" style="z-index:19891019; background:url({$Think.const.IMG_URL}/kong.png); display:none;"
+     id="fapiaotijiao">
+    <div class="layui-layer layui-anim layui-layer-page layer-ext-moon"
+         style="overflow: hidden;z-index: 19891020; width:350px; height:360px; left:50%; margin-left:-155px;">
+        <div class="layui-layer-title" style="cursor: move;">开票</div>
+        <div class="layui-layer-content" style="overflow: hidden">
+            <div class="animated">
+                <form action="" method="post" class="form-horizontal">
+                    <div class="ibox float-e-margins" style="margin-bottom:0px;margin-left: 3px;margin-right: 3px">
+                        <div class="ibox-content">
+
+                            <div class="input-group m-b" style="margin-bottom:5px;">
+                                <span class="input-group-addon">开票时间：</span>
+                                <input type="text" name="beizhu" class="form-control" id="fuzhi11" multiple="multiple"
+                                       style="" value=""/>
+                            </div>
+                            <div class="input-group m-b" style="margin-bottom:5px;">
+                                <span class="input-group-addon">发票号：</span>
+                                <input type="text" name="beizhu" class="form-control" id="fuzhi22" multiple="multiple"
+                                       style="" value=""/>
+                            </div>
+
+                            <div class="input-group m-b" style="margin-bottom:5px;">
+                                <span class="input-group-addon">备注：</span>
+                                <input type="text" name="beizhu" class="form-control" id="fuzhi33" multiple="multiple"
+                                       style="" value=""/>
+                            </div>
+                            <div class="input-group " style="margin-bottom:5px;">
+                                <ul class="file-list ">
+
+                                </ul>
+                            </div>
+                            <div class="form-group" align="center" style="margin-bottom:5px;">
+                                <p style="background: #29b578; width: 9rem; height: 3rem; line-height: 3rem; color: #fff;  letter-spacing: 1px;margin-top: 1rem;">
+                                    <sapn style="cursor: pointer;" class="subpiaoapply" zid=""
+                                          onclick="submintfapiao(this);">确认开票
+                                    </sapn>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <span class="layui-layer-setwin" id="fapiaotijiaoxx"><a
+                class="layui-layer-ico layui-layer-close layui-layer-close1"
+                href="javascript:;"></a></span>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    if ("ontouchend" in document) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "script>");
+</script>
+<!--<script src="{$Think.const.JS_URL}/typeahead-bs2.min.js"></script>-->
+<!-- page specific plugin scripts -->
+
+<script src="http://www.jq22.com/jquery/bootstrap-3.3.4.js"></script>
+<script src="{$Think.const.JS_URL}/typeahead-bs2.min.js"></script>
+<script src="{$Think.const.JS_URL}/date-time/bootstrap-datepicker.min.js"></script>
+<script src="{$Think.const.JS_URL}/date-time/bootstrap-timepicker.min.js"></script>
+<script src="{$Think.const.JS_URL}/date-time/moment.min.js"></script>
+<script src="{$Think.const.JS_URL}/date-time/daterangepicker.min.js"></script>
+<!-- page specific plugin scripts -->
+<script src="{$Think.const.JS_URL}/jquery.dataTables.min.js"></script>
+<!-- ace scripts -->
+<script src="{$Think.const.JS_URL}/ace-elements.min.js"></script>
+<script src="{$Think.const.JS_URL}/ace.min.js"></script>
+
+<script src="https://cdn.bootcss.com/layer/2.3/layer.js"></script>
+<!-- inline scripts related to this page -->
+<script type="text/javascript">
+    jQuery(function ($) {
+        $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+        var oTable1 = $('#sample-table-2').dataTable({
+            "aoColumns": [
+                {"bSortable": false},
+                null, null, null, null, null,
+                {"bSortable": false}
+            ]
+        });
+        $('table th input:checkbox').on('click', function () {
+            var that = this;
+            $(this).closest('table').find('tr > td:first-child input:checkbox')
+                .each(function () {
+                    this.checked = that.checked;
+                    $(this).closest('tr').toggleClass('selected');
+                });
+        });
+
+        $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
+
+        function tooltip_placement(context, source) {
+            var $source = $(source);
+            var $parent = $source.closest('table')
+            var off1 = $parent.offset();
+            var w1 = $parent.width();
+            var off2 = $source.offset();
+            var w2 = $source.width();
+            if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
+            return 'left';
+        }
+
+        $('.choose').click(function () {
+            $('#choose-file').click();
+        })
+        ////////////////////////////////////////////////图片上传//////////////////////////////////////////////
+        //声明变量
+        var $button = $('#upload'),
+            //选择文件按钮
+            $file = $("#choose-file"),
+            //回显的列表
+            $list = $('.file-list'),
+            //选择要上传的所有文件
+            fileList = [];
+        //当前选择上传的文件
+        var curFile;
+        // 选择按钮change事件，实例化fileReader,调它的readAsDataURL并把原生File对象传给它，
+        // 监听它的onload事件，load完读取的结果就在它的result属性里了。它是一个base64格式的，可直接赋值给一个img的src.
+        $file.on('change', function (e) {
+            //上传过图片后再次上传时限值数量
+            var numold = $('.file-list li').length;
+            if (numold >= 6) {
+                layer.alert('最多上传6张图片');
+                return;
+            }
+            //限制单次批量上传的数量
+            var num = e.target.files.length;
+            var numall = numold + num;
+            if (num > 6) {
+                layer.alert('最多上传6张图片');
+                return;
+            } else if (numall > 6) {
+                layer.alert('最多上传6张图片');
+                return;
+            }
+            //原生的文件对象，相当于$file.get(0).files;//files[0]为第一张图片的信息;
+            curFile = this.files;
+            curFile = $file.get(0).files;
+            console.log(curFile);
+            //将FileList对象变成数组
+            fileList = fileList.concat(Array.from(curFile));
+            //console.log(fileList);
+            for (var i = 0, len = curFile.length; i < len; i++) {
+                reviewFile(curFile[i])
+            }
+            $('.file-list').fadeIn(2500);
+        })
+
+
+        function reviewFile(file) {
+            //实例化fileReader,
+            var fd = new FileReader();
+            //获取当前选择文件的类型
+            var fileType = file.type;
+            //调它的readAsDataURL并把原生File对象传给它，
+            fd.readAsDataURL(file);//base64
+            // console.log(file);
+            //监听它的onload事件，load完读取的结果就在它的result属性里了
+            fd.onload = function () {
+                if (/^image\/[jpeg|png|jpg|gif]/.test(fileType)) {
+                    $list.append('<li class="file-item"><img src="' + this.result + '" alt="" height="70"><span class="file-del"><i class="iconfont ">&#xe636;</i></span></li>').children(':last').hide().fadeIn(2500);
+                } else {
+                    $list.append('<li class="file-item"><span class="file-name">' + file.name + '</span><span class="file-del"><i class="iconfont ">&#xe636;</i></span></li>')
+                }
+
+            }
+
+        }
+
+        //点击删除按钮事件：
+        $(".file-list").on('click', '.file-del', function () {
+            let $parent = $(this).parent();
+            console.log($parent);
+            let index = $parent.index();
+            fileList.splice(index, 1);
+            $parent.fadeOut(850, function () {
+                $parent.remove()
+            });
+            var filess = document.getElementById('choose-file');
+            filess.value = '';
+        });
+        //点击上传按钮事件：
+        $button.on('click', function () {
+            var fahuo_time = $('#fuzhi1').val();
+            var fahuo_way = $('#cxfpke').val();
+            var beizhu = $('#fuzhi3').val();
+            var xsid = parseInt($('.subapply').attr('zid'));
+            if (!(xsid > 1)) {
+                layer.msg('操作对象不合法！');
+            }
+            if (fileList.length > 6) {
+                layer.msg('最多允许上传6张图片');
+                return;
+            } else {
+                var formData = new FormData();
+                for (var i = 0, len = fileList.length; i < len; i++) {
+                    //console.log(fileList[i]);
+                    formData.append('upfile[]', fileList[i]);
+                }
+                formData.append('fahuo_time', fahuo_time);
+                formData.append('fahuo_way', fahuo_way);
+                formData.append('beizhu', beizhu);
+                formData.append('xsid', xsid);
+                // console.log(formData);
+                $.ajax({
+                    url: '{$Think.const.DQURL}/index/xiaoshou/fahuo',
+                    type: 'post',
+                    data: formData,
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        var data = JSON.parse(data);
+                        if (data.code == "200") { //判断返回值，这里根据的业务内容可做调整
+                            console.log(111);
+                            $('#fahuotijiao').hide()
+                            layer.msg('提交成功');
+                        } else {
+                            layer.msg(data.msg);
+                            return false;
+                        }
+                    }
+                })
+            }
+        })
+
+
+    })
+    $('#fahuotijiaoxx').on('click', function () {
+        $('#fahuotijiao').hide()
+    });
+    $('#fapiaotijiaoxx').on('click', function () {
+        $('#fapiaotijiao').hide()
+    });
+
+    function confirmadd(e) {
+        var xsid = $('.subtijiao').attr('xsid');
+        var xs_id = 0;
+        if (xsid != '' && xsid != null && xsid != undefined) {
+            xs_id = parseInt(xsid);
+        }
+        $(e).attr('disabled', 'disabled');
+        var company_name = $("input[name='company_name']").val();
+        var create_time = $("input[name='create_time']").val();
+        var product_name = $("input[name='product_name']").val();
+        var rate = $(".rate").val();
+        var rate_money = $("input[name='rate_money']").val();
+        var total_money = $("input[name='total_money']").val();
+        var money = $("input[name='money']").val();
+        var owe = $("input[name='owe']").val();
+        var invoice_status = $(".invoice_status").val();
+        var product_status = $(".product_status").val();
+        var if_hanshui = $(".if_hanshui").val();
+        var xiaoshoudata = '';
+        if (company_name == '' || company_name == undefined || company_name == null) {
+            layer.msg('公司名称不能为空');
+            $(e).removeAttr('disabled');
+        }
+        xiaoshoudata += 'company_name*' + company_name;
+        xiaoshoudata += ',create_time*' + create_time;
+        xiaoshoudata += ',product_name*' + product_name;
+        xiaoshoudata += ',rate*' + rate;
+        xiaoshoudata += ',rate_money*' + rate_money;
+        xiaoshoudata += ',money*' + money;
+        xiaoshoudata += ',owe*' + owe;
+        xiaoshoudata += ',total_money*' + total_money;
+        xiaoshoudata += ',invoice_status*' + invoice_status;
+        xiaoshoudata += ',product_status*' + product_status;
+        xiaoshoudata += ',hanshui*' + if_hanshui;
+
+        $.ajax({
+            url: '{$Think.const.DQURL}/index/xiaoshou/save_xiaoshou?xs_id=' + xs_id,// 获取自己系统后台用户信息接口
+            data: {"xiaoshoudata": xiaoshoudata},
+            type: "POST",
+            dataType: "json",
+            success: function (data) {
+                if (data) {
+                    var data = JSON.parse(data);
+                    if (data.code == "200") { //判断返回值，这里根据的业务内容可做调整
+                        $(e).removeAttr('disabled');
+                        layer.msg('提交成功');
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 800)
+                    } else {
+                        alert(data.msg);
+                        $(e).removeAttr('disabled');
+                        return false;
+                    }
+                }
+            },
+            error: function (data) {
+                $(e).removeAttr('disabled');
+                // console.log(data.message);
+            }
+        });
+    }
+
+    function fahuo(e) {
+        var xs_id = $(e).parent().attr('attrid');
+        if (xs_id != '' && xs_id != undefined && xs_id != null) {
+            $('#fahuotijiao').css('display', 'block');
+            $('.subapply').attr('zid', '');
+            xs_id = parseInt(xs_id);
+            $('.subapply').attr('zid', xs_id);
+        } else {
+            layer.msg('操作不合法！')
+        }
+    }
+
+    function fapiao(e) {
+        var xs_id = $(e).parent().attr('attrid');
+        if (xs_id != '' && xs_id != undefined && xs_id != null) {
+            $('#fapiaotijiao').css('display', 'block');
+            $('.subpiaoapply').attr('zid', '');
+            xs_id = parseInt(xs_id);
+            $('.subpiaoapply').attr('zid', xs_id);
+        } else {
+            layer.msg('操作不合法！')
+        }
+    }
+
+    function submintfapiao(e) {
+        var xs_id = parseInt($(e).attr('zid'));
+        var create_time = $('#fuzhi11').val();
+        var invoice_no = $('#fuzhi22').val();
+        var beizhu = $('#fuzhi33').val();
+        $.ajax({
+            url: '{$Think.const.DQURL}/index/xiaoshou/fapiao?xs_id=' + xs_id,// 获取自己系统后台用户信息接口
+            data: {"create_time": create_time, "invoice_no": invoice_no, "beizhu": beizhu},
+            type: "POST",
+            dataType: "json",
+            success: function (data) {
+                if (data) {
+                    var data = JSON.parse(data);
+                    if (data.code == "200") { //判断返回值，这里根据的业务内容可做调整
+                        $(e).removeAttr('disabled');
+                        layer.msg('提交成功');
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 2000)
+                    } else {
+                        alert(data.msg);
+                        $(e).removeAttr('disabled');
+                        return false;
+                    }
+                }
+            },
+            error: function (data) {
+                $(e).removeAttr('disabled');
+                // console.log(data.message);
+            }
+        });
+    }
+
+</script>
+</body>
+</html>
+
+
+

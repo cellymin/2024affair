@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>苗博士系统-门店列表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- basic styles -->
+    <link href="{$Think.const.CSS_URL}/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="http://cdn.bootcss.com/font-awesome/3.2.1/css/font-awesome.min.css">
+    <!--[if IE 7]>
+    <link rel="stylesheet" href="{$Think.const.CSS_URL}/font-awesome-ie7.min.css"/>
+    <![endif]-->
+    <!-- page specific plugin styles -->
+    <!-- ace styles -->
+    <link rel="stylesheet" href="{$Think.const.CSS_URL}/ace.min.css"/>
+    <link rel="stylesheet" href="{$Think.const.CSS_URL}/ace-rtl.min.css"/>
+    <link rel="stylesheet" href="{$Think.const.CSS_URL}/ace-skins.min.css"/>
+    <link rel="stylesheet" href="{$Think.const.CSS_URL}/datepicker.css"/>
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" href="{$Think.const.CSS_URL}/ace-ie.min.css"/>
+    <![endif]-->
+    <!-- inline styles related to this page -->
+    <!-- ace settings handler -->
+    <script src="{$Think.const.JS_URL}/ace-extra.min.js"></script>
+    <!--    <script src="{$Think.const.JS_URL}/layer/layer.js"></script>-->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="{$Think.const.JS_URL}/html5shiv.js"></script>
+    <script src="{$Think.const.JS_URL}/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+
+<style type="text/css">
+
+    html {
+        overflow: hidden;
+        background: #fff;
+        width: 100%;
+        height: 100%;
+    }
+
+    html, body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote, th, td {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: "微软雅黑";
+        font-size: 12px;
+        color: #000000;
+        background: #fff;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+    }
+
+    button, input, select, textarea {
+        font: 12px/1.5 Arial, "宋体", Helvetica, Verdana, sans-serif;
+        word-wrap: break-word;
+        color: #565756;
+    }
+
+    ul, li {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-weight: normal;
+        font-size: 100%;
+    }
+
+    img {
+        border: none;
+        border: 0;
+        vertical-align: middle;
+    }
+
+    a {
+        text-decoration: none;
+        outline: none;
+    }
+
+    p {
+        margin: 0;
+        padding: 0;
+    }
+
+    input, select, textarea {
+        vertical-align: middle;
+        *font-size: 100%;
+    }
+
+    input {
+        margin: 0;
+        outline: none;
+        padding: 0;
+    }
+
+    input::-ms-clear {
+        display: none;
+    }
+
+    .clearfix:after {
+
+        content: ".";
+
+        display: block;
+
+        height: 0;
+
+        clear: both;
+
+        visibility: hidden;
+
+
+    }
+
+    .clearfix {
+        *zoom: 1
+    }
+
+
+    /* m_zlxg */
+
+    .m_zlxg {
+        width: 105px;
+        height: 34px;
+        line-height: 34px;
+        cursor: pointer;
+        float: left;
+        margin: 0 12px 0 0;
+        display: inline;
+        background: url({$Think.const.IMG_URL}/zlxg2.jpg) no-repeat;
+    }
+
+    .m_zlxg p {
+        width: 71px;
+        padding-left: 10px;
+        overflow: hidden;
+        line-height: 30px;
+        color: #333333;
+        font-size: 12px;
+        font-family: "微软雅黑";
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .m_zlxg2 {
+        position: absolute;
+        top: 29px;
+        border: 1px solid #ded3c1;
+        background: #fff;
+        width: 91px;
+        display: none;
+        max-height: 224px;
+        -height: 224px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        white-space: nowrap;
+    }
+
+    .m_zlxg2 li {
+        line-height: 28px;
+        white-space: nowrap;
+        padding-left: 10px;
+        font-family: "微软雅黑";
+        color: #333333;
+        font-size: 12px;
+    }
+
+    .m_zlxg2 li:hover {
+        color: #7a5a21;
+    }
+
+
+    .left_form {
+        clear: both;
+        width: 45%;
+        float: left;
+        padding-right: 2%;
+    }
+</style>
+<body>
+{include file="template/nav.html"}
+<div class="main-container" id="main-container">
+    <script type="text/javascript">
+        try {
+            ace.settings.check('main-container', 'fixed')
+        } catch (e) {
+        }
+    </script>
+    <div class="main-container-inner">
+        <a class="menu-toggler" id="menu-toggler" href="#">
+            <span class="menu-text"></span>
+        </a>
+        {include file="template/sidebar.html"}
+        <div class="main-content">
+            {include file="template/head.html"}
+            <div class="page-content" style="padding-bottom: 0px;">
+                <div class="page-header">
+                    <h1>
+                        <small>
+                            管理门店
+                        </small>
+                    </h1>
+                </div><!-- /.page-header -->
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="widget-box">
+                                    <div class="widget-header">
+                                        <h4>编辑门店</h4>
+                                        <span class="widget-toolbar">
+														<a href="#" data-action="reload">
+															<i class="icon-refresh"></i>
+														</a>
+														<a href="#" data-action="collapse">
+															<i class="icon-chevron-up"></i>
+														</a>
+													</span>
+                                    </div>
+                                    <div class="widget-body">
+                                        <div class="widget-main">
+                                            <div class="form-group left_form">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+																	店名
+																</span>
+                                                    <input class="form-control input-xlarge" name="chain_name"
+                                                           type="text"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                     <span class="input-group-addon">
+																	类型
+																</span>
+                                                    <select class="form-control input-xlarge chain_type" name="type">
+                                                        <option value="1">苗医生</option>
+                                                        <option value="2">苗博士</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group left_form">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">状态</span>
+                                                    <select class="form-control input-xlarge chain_status"
+                                                            name="chain_status" type="text">
+                                                        <option value="1">开启</option>
+                                                        <option value="2">关闭</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+																	电话
+																</span>
+                                                    <input class="form-control input-mask-date" name="phone"
+                                                           type="text"/>
+                                                </div>
+                                            </div>
+
+
+                                            <!--                                            <div class="form-group left_form">-->
+                                            <!--                                                <div class="input-group">-->
+                                            <!--                                                    <span class="input-group-addon">-->
+                                            <!--																	状态-->
+                                            <!--																</span>-->
+                                            <!--                                                    <input class="form-control input-mask-date" type="text"/>-->
+                                            <!--                                                </div>-->
+                                            <!--                                            </div>-->
+
+
+                                            <div class="form-group left_form">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon" style="width: 10%">
+																	地址
+																</span>
+                                                    <div id="sjld" style="margin:0px auto;position:relative;">
+
+                                                        <div class="m_zlxg" id="shenfen">
+
+                                                            <p title="">选择省份</p>
+
+                                                            <div class="m_zlxg2">
+
+                                                                <ul></ul>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="m_zlxg" id="chengshi">
+
+                                                            <p title="">选择城市</p>
+
+                                                            <div class="m_zlxg2">
+
+                                                                <ul></ul>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="m_zlxg" id="quyu">
+
+                                                            <p title="">选择区域</p>
+
+                                                            <div class="m_zlxg2">
+
+                                                                <ul></ul>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                        <input id="sfdq_num" type="hidden" value=""/>
+
+                                                        <input id="csdq_num" type="hidden" value=""/>
+
+                                                        <input id="sfdq_tj" type="hidden" value=""/>
+
+                                                        <input id="csdq_tj" type="hidden" value=""/>
+
+                                                        <input id="qydq_tj" type="hidden" value=""/>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">详细地址</span>
+                                                    <input class="form-control input-mask-date" name="address"
+                                                           type="text"/>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix form-actions">
+                                                <div class="col-md-offset-3 col-md-9" style="    margin-left: 40%;">
+                                                    <button class="btn btn-info subtijiao" type="button" ccid=""
+                                                            onclick="confirmadd(this);">
+                                                        <i class="icon-ok bigger-110"></i>
+                                                        提交
+                                                    </button>
+                                                    &nbsp; &nbsp; &nbsp;
+                                                    <button class="btn" type="reset" onclick="resetsubmit();">
+                                                        <i class="icon-undo bigger-110"></i>
+                                                        重置
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /span -->
+                        </div><!-- /row -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+            <div class="page-content">
+                <div class="page-header">
+                    <h1>
+                        <small>
+                            门店列表
+                        </small>
+                    </h1>
+                </div><!-- /.page-header -->
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="table-responsive">
+                                    <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th class="center">
+                                                <label>
+                                                    <input type="checkbox" class="ace"/>
+                                                    <span class="lbl"></span>
+                                                </label>
+                                            </th>
+                                            <th>名称</th>
+                                            <th>省</th>
+                                            <th>
+                                                市
+                                            </th>
+                                            <th class="hidden-480">状态</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {foreach $chain as $k }
+                                        <tr>
+                                            <td class="center">
+                                                <label>
+                                                    <input type="checkbox" class="ace"/>
+                                                    <span class="lbl"></span>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <a href="#">{$k.name}</a>
+                                            </td>
+                                            <td>{$k.province}</td>
+                                            <td class="hidden-480">{$k.city}</td>
+                                            <td>{if condition="$k.status==1"}{else /}{/if}</td>
+
+                                            <td>
+                                                <div class="visible-md visible-lg hidden-sm hidden-xs btn-group">
+
+                                                    <button class="btn btn-xs btn-info" onclick="editchain({$k.id});">
+                                                        <i class="icon-edit bigger-120"></i>
+                                                    </button>
+                                                    <button class="btn btn-xs btn-danger"
+                                                            onclick="delchain(this,{$k.id});">
+                                                        <i class="icon-trash bigger-120"></i>
+                                                    </button>
+                                                </div>
+
+                                            </td>
+                                        </tr>
+                                        {/foreach}
+                                        </tbody>
+                                    </table>
+                                </div><!-- /.table-responsive -->
+                            </div><!-- /span -->
+                        </div><!-- /row -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div><!-- /.main-content -->
+    </div><!-- /.main-container-inner -->
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+        <i class="icon-double-angle-up icon-only bigger-110"></i>
+    </a>
+</div><!-- /.main-container -->
+<!-- basic scripts -->
+<!--[if !IE]> -->
+
+<script src="http://www.jq22.com/jquery/jquery-2.1.1.js"></script>
+<!-- <![endif]-->
+<!--[if IE]>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<![endif]-->
+<!--[if !IE]> -->
+
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='{$Think.const.JS_URL}/jquery-2.0.3.min.js'>" + "<" + "script>");
+</script>
+<!-- <![endif]-->
+<!--[if IE]>
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='assets/js/jquery-1.10.2.min.js'>" + "<" + "script>");
+</script>
+<![endif]-->
+<script type="text/javascript">
+    if ("ontouchend" in document) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "script>");
+</script>
+<!--<script src="{$Think.const.JS_URL}/typeahead-bs2.min.js"></script>-->
+<!-- page specific plugin scripts -->
+<!--[if lte IE 8]>
+<script src="{$Think.const.JS_URL}/excanvas.min.js"></script>
+<![endif]-->
+<script type="text/javascript">
+    if ("ontouchend" in document) document.write("<script src='{$Think.const.JS_URL}/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+</script>
+<script type="text/javascript" src="{$Think.const.JS_URL}/address.js"></script>
+<script src="http://www.jq22.com/jquery/bootstrap-3.3.4.js"></script>
+<script src="{$Think.const.JS_URL}/typeahead-bs2.min.js"></script>
+<script src="{$Think.const.JS_URL}/date-time/bootstrap-datepicker.min.js"></script>
+<script src="{$Think.const.JS_URL}/date-time/bootstrap-timepicker.min.js"></script>
+<script src="{$Think.const.JS_URL}/date-time/moment.min.js"></script>
+<script src="{$Think.const.JS_URL}/date-time/daterangepicker.min.js"></script>
+<!-- page specific plugin scripts -->
+<script src="{$Think.const.JS_URL}/jquery.dataTables.min.js"></script>
+<!-- ace scripts -->
+<script src="{$Think.const.JS_URL}/ace-elements.min.js"></script>
+<script src="{$Think.const.JS_URL}/ace.min.js"></script>
+<script src="{$Think.const.JS_URL}/layer/layer.js"></script>
+<!-- inline scripts related to this page -->
+<script type="text/javascript">
+
+    $(function () {
+        $("#sjld").sjld("#shenfen", "#chengshi", "#quyu");
+    });
+
+</script>
+
+<script type="text/javascript">
+    jQuery(function ($) {
+        $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+        var oTable1 = $('#sample-table-2').dataTable({
+            "aoColumns": [
+                {"bSortable": false},
+                null, null, null, null, null,
+                {"bSortable": false}
+            ]
+        });
+        $('table th input:checkbox').on('click', function () {
+            var that = this;
+            $(this).closest('table').find('tr > td:first-child input:checkbox')
+                .each(function () {
+                    this.checked = that.checked;
+                    $(this).closest('tr').toggleClass('selected');
+                });
+        });
+
+        $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
+
+        function tooltip_placement(context, lsource) {
+            var $source = $(source);
+            var $parent = $source.closest('table')
+            var off1 = $parent.offset();
+            var w1 = $parent.width();
+            var off2 = $source.offset();
+            var w2 = $source.width();
+            if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
+            return 'left';
+        }
+    })
+
+    function confirmadd(e) {
+        var ccid = $('.subtijiao').attr('ccid');
+        var chain_id = 0;
+        if (ccid != '' && ccid != null && ccid != undefined) {
+            chain_id = parseInt(ccid);
+        }
+        $(e).attr('disabled', 'disabled');
+        var chain_name = $("input[name='chain_name']").val();
+        var type = $(".chain_type").val();
+        var status = $(".chain_status").val();
+        var shenfen = $("#shenfen p").text();
+        var chengshi = $("#chengshi  p").text();
+        var quyu = $("#quyu  p").text();
+        var address = $("input[name='address']").val();
+        var phone = $("input[name='phone']").val();
+        var chaindata = '';
+        if (chain_name == '' || chain_name == undefined || chain_name == null) {
+            layer.msg('门店名称不能为空');
+            $(e).removeAttr('disabled');
+        }
+        chaindata += 'name*' + chain_name;
+        chaindata += ',type*' + type;
+        chaindata += ',phone*' + phone;
+        chaindata += ',status*' + status;
+        chaindata += ',province*' + shenfen;
+        chaindata += ',city*' + chengshi;
+        chaindata += ',area*' + quyu;
+        chaindata += ',address*' + address;
+        $.ajax({
+            url: '{$Think.const.DQURL}/index/chain/save_chain?chain_id=' + chain_id,// 获取自己系统后台用户信息接口
+            data: {"chaindata": chaindata},
+            type: "POST",
+            dataType: "json",
+            success: function (data) {
+                if (data) {
+                    var data = JSON.parse(data);
+                    if (data.code == "200") { //判断返回值，这里根据的业务内容可做调整
+                        $(e).removeAttr('disabled');
+                        layer.msg('提交成功');
+                        window.location.reload();
+                    } else {
+                        alert(data.msg);
+                        $(e).removeAttr('disabled');
+                        return false;
+                    }
+                }
+            },
+            error: function (data) {
+                $(e).removeAttr('disabled');
+                // console.log(data.message);
+            }
+        });
+    }
+
+    function editchain(id) {
+        id = parseInt(id);
+        $.ajax({
+            url: '{$Think.const.DQURL}/index/chain/index?id=' + id,// 获取自己系统后台用户信息接口
+            type: "POST",
+            dataType: "json",
+            success: function (data) {
+                if (data) {
+                    var data = JSON.parse(data);
+                    var chain = data.chain;
+                    $('.subtijiao').attr('ccid', '');
+                    $("input[name='chain_name']").val(chain.name);
+                    $(".chain_type").find("option[value=" + chain.type + "]").attr("selected", true);
+                    $(".chain_status").find("option[value=" + chain.status + "]").attr("selected", true);
+                    $("#shenfen p").text(chain.province);
+                    $("#chengshi  p").text(chain.city);
+                    $("#quyu  p").text(chain.area);
+                    $("input[name='address']").val(chain.address);
+                    $("input[name='phone']").val(chain.phone);
+                    $('.subtijiao').attr('ccid', chain.id);
+                }
+            },
+            error: function (data) {
+                $(e).removeAttr('disabled');
+                // console.log(data.message);
+            }
+        });
+    }
+
+    function delchain(e, id) {
+        var dm = $(e);
+        layer.confirm('你确定要删除吗?', {icon: 3, title: '提示'}, function (index) {
+            $.ajax({
+                url: '{$Think.const.DQURL}/index/chain/delchain?id=' + id,// 获取自己系统后台用户信息接口
+                type: "POST",
+                dataType: "json",
+                success: function (data) {
+                    var data = JSON.parse(data);
+                    if (data.code == 200) {
+                        layer.msg(data.msg);
+                        dm.parent().parent().parent().remove();
+                    }
+                },
+                error: function (data) {
+                    $(e).removeAttr('disabled');
+                }
+            });
+            layer.close(index);
+        })
+
+    }
+</script>
+</body>
+</html>

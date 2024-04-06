@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>苗博士系统-用户列表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- basic styles -->
+    <link href="{$Think.const.CSS_URL}/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="http://cdn.bootcss.com/font-awesome/3.2.1/css/font-awesome.min.css">
+    <!--[if IE 7]>
+    <link rel="stylesheet" href="{$Think.const.CSS_URL}/font-awesome-ie7.min.css"/>
+    <![endif]-->
+    <!-- page specific plugin styles -->
+    <!-- ace styles -->
+    <link rel="stylesheet" href="{$Think.const.CSS_URL}/ace.min.css"/>
+    <link rel="stylesheet" href="{$Think.const.CSS_URL}/ace-rtl.min.css"/>
+    <link rel="stylesheet" href="{$Think.const.CSS_URL}/ace-skins.min.css"/>
+    <link rel="stylesheet" href="{$Think.const.CSS_URL}/datepicker.css"/>
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" href="{$Think.const.CSS_URL}/ace-ie.min.css"/>
+    <![endif]-->
+    <!-- inline styles related to this page -->
+    <!-- ace settings handler -->
+    <script src="{$Think.const.JS_URL}/ace-extra.min.js"></script>
+    <!--    <script src="{$Think.const.JS_URL}/layer/layer.js"></script>-->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="{$Think.const.JS_URL}/html5shiv.js"></script>
+    <script src="{$Think.const.JS_URL}/respond.min.js"></script>
+    <![endif]-->
+</head>
+<style>
+    .left_form {
+        clear: both;
+        width: 45%;
+        float: left;
+        padding-right: 2%;
+    }
+</style>
+<body>
+{include file="template/nav.html"}
+<div class="main-container" id="main-container">
+    <script type="text/javascript">
+        try {
+            ace.settings.check('main-container', 'fixed')
+        } catch (e) {
+        }
+    </script>
+    <div class="main-container-inner">
+        <a class="menu-toggler" id="menu-toggler" href="#">
+            <span class="menu-text"></span>
+        </a>
+        {include file="template/sidebar.html"}
+        <div class="main-content">
+            {include file="template/head.html"}
+            <div class="page-content" style="padding-bottom: 0px;">
+                <div class="page-header">
+                    <h1>
+                        <small>
+                            管理用户
+                        </small>
+                    </h1>
+                </div><!-- /.page-header -->
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="widget-box">
+                                    <div class="widget-header">
+                                        <h4>编辑用户</h4>
+                                        <span class="widget-toolbar">
+														<a href="#" data-action="reload">
+															<i class="icon-refresh"></i>
+														</a>
+														<a href="#" data-action="collapse">
+															<i class="icon-chevron-up"></i>
+														</a>
+													</span>
+                                    </div>
+                                    <div class="widget-body">
+                                        <div class="widget-main">
+                                            <div class="form-group left_form">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+																	姓名
+																</span>
+                                                    <input class="form-control input-xlarge" type="text"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                     <span class="input-group-addon">
+																	性别
+																</span>
+                                                    <select class="form-control input-xlarge" type="text">
+                                                        <option>男</option>
+                                                        <option>女</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group left_form">
+                                                <div class="input-group">
+                                                    <input class="form-control date-picker" id="id-date-picker-1"
+                                                           placeholder="生日" type="text" data-date-format="yyyy-mm-dd">
+                                                    <span class="input-group-addon">
+																		<i class="icon-calendar bigger-110"></i>
+																	</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input class="form-control date-picker" id="id-date-picker-2"
+                                                           placeholder="入职日期" type="text" data-date-format="yyyy-mm-dd">
+                                                    <span class="input-group-addon">
+																		<i class="icon-calendar bigger-110"></i>
+																	</span>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group left_form">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+																	部门
+																</span>
+                                                    <select class="form-control input-xlarge" type="text">
+                                                        <option>网络部</option>
+                                                        <option>客服一部</option>
+                                                        <option>客服二部</option>
+                                                        <option>回访部</option>
+                                                        <option>部</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+																	电话
+																</span>
+                                                    <input class="form-control input-mask-date" type="text"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+																	地址
+																</span>
+                                                    <input class="form-control input-mask-date" type="text"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group left_form">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+																	职级
+																</span>
+                                                    <input class="form-control input-mask-date" type="text"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+																	职位
+																</span>
+                                                    <input class="form-control input-mask-date" type="text"/>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix form-actions">
+                                                <div class="col-md-offset-3 col-md-9">
+                                                    <button class="btn btn-info" type="button" onclick="confirmadd();">
+                                                        <i class="icon-ok bigger-110"></i>
+                                                        提交
+                                                    </button>
+                                                    &nbsp; &nbsp; &nbsp;
+                                                    <button class="btn" type="reset" onclick="resetsubmit();">
+                                                        <i class="icon-undo bigger-110"></i>
+                                                        重置
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /span -->
+                        </div><!-- /row -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+            <div class="page-content">
+                <div class="page-header">
+                    <h1>
+                        <small>
+                            用户列表
+                        </small>
+                    </h1>
+                </div><!-- /.page-header -->
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="table-responsive">
+                                    <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th class="center">
+                                                <label>
+                                                    <input type="checkbox" class="ace"/>
+                                                    <span class="lbl"></span>
+                                                </label>
+                                            </th>
+                                            <th>姓名</th>
+                                            <th>职位</th>
+                                            <th>
+                                                电话
+                                            </th>
+                                            <th class="hidden-480">入职日期</th>
+                                            <th class="hidden-480">状态</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td class="center">
+                                                <label>
+                                                    <input type="checkbox" class="ace"/>
+                                                    <span class="lbl"></span>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <a href="#">base.com</a>
+                                            </td>
+                                            <td>$35</td>
+                                            <td class="hidden-480">2,595</td>
+                                            <td>Feb 18</td>
+                                            <td class="hidden-480">
+                                                任职
+                                            </td>
+                                            <td>
+                                                <div class="visible-md visible-lg hidden-sm hidden-xs btn-group">
+                                                    <button class="btn btn-xs btn-success">
+                                                        <i class="icon-ok bigger-120"></i>
+                                                    </button>
+                                                    <button class="btn btn-xs btn-info">
+                                                        <i class="icon-edit bigger-120"></i>
+                                                    </button>
+                                                    <button class="btn btn-xs btn-danger">
+                                                        <i class="icon-trash bigger-120"></i>
+                                                    </button>
+                                                    <button class="btn btn-xs btn-warning">
+                                                        <i class="icon-flag bigger-120"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                                    <div class="inline position-relative">
+                                                        <button class="btn btn-minier btn-primary dropdown-toggle"
+                                                                data-toggle="dropdown">
+                                                            <i class="icon-cog icon-only bigger-110"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
+                                                            <li>
+                                                                <a href="#" class="tooltip-info" data-rel="tooltip"
+                                                                   title="View">
+																				<span class="blue">
+																					<i class="icon-zoom-in bigger-120"></i>
+																				</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" class="tooltip-success" data-rel="tooltip"
+                                                                   title="Edit">
+																				<span class="green">
+																					<i class="icon-edit bigger-120"></i>
+																				</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" class="tooltip-error" data-rel="tooltip"
+                                                                   title="Delete">
+																				<span class="red">
+																					<i class="icon-trash bigger-120"></i>
+																				</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="center">
+                                                <label>
+                                                    <input type="checkbox" class="ace"/>
+                                                    <span class="lbl"></span>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <a href="#">best.com</a>
+                                            </td>
+                                            <td>$75</td>
+                                            <td class="hidden-480">6,500</td>
+                                            <td>Apr 03</td>
+                                            <td class="hidden-480">
+                                                离职
+                                            </td>
+                                            <td>
+                                                <div class="visible-md visible-lg hidden-sm hidden-xs btn-group">
+                                                    <button class="btn btn-xs btn-success">
+                                                        <i class="icon-ok bigger-120"></i>
+                                                    </button>
+                                                    <button class="btn btn-xs btn-info">
+                                                        <i class="icon-edit bigger-120"></i>
+                                                    </button>
+                                                    <button class="btn btn-xs btn-danger">
+                                                        <i class="icon-trash bigger-120"></i>
+                                                    </button>
+                                                    <button class="btn btn-xs btn-warning">
+                                                        <i class="icon-flag bigger-120"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                                    <div class="inline position-relative">
+                                                        <button class="btn btn-minier btn-primary dropdown-toggle"
+                                                                data-toggle="dropdown">
+                                                            <i class="icon-cog icon-only bigger-110"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
+                                                            <li>
+                                                                <a href="#" class="tooltip-info" data-rel="tooltip"
+                                                                   title="View">
+																				<span class="blue">
+																					<i class="icon-zoom-in bigger-120"></i>
+																				</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" class="tooltip-success" data-rel="tooltip"
+                                                                   title="Edit">
+																				<span class="green">
+																					<i class="icon-edit bigger-120"></i>
+																				</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" class="tooltip-error" data-rel="tooltip"
+                                                                   title="Delete">
+																				<span class="red">
+																					<i class="icon-trash bigger-120"></i>
+																				</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div><!-- /.table-responsive -->
+                            </div><!-- /span -->
+                        </div><!-- /row -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div><!-- /.main-content -->
+    </div><!-- /.main-container-inner -->
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+        <i class="icon-double-angle-up icon-only bigger-110"></i>
+    </a>
+</div><!-- /.main-container -->
+<!-- basic scripts -->
+<!--[if !IE]> -->
+<script src="http://www.jq22.com/jquery/jquery-2.1.1.js"></script>
+<!-- <![endif]-->
+<!--[if IE]>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<![endif]-->
+<!--[if !IE]> -->
+
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='{$Think.const.JS_URL}/jquery-2.0.3.min.js'>" + "<" + "script>");
+</script>
+<!-- <![endif]-->
+<!--[if IE]>
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='assets/js/jquery-1.10.2.min.js'>" + "<" + "script>");
+</script>
+<![endif]-->
+<script type="text/javascript">
+    if ("ontouchend" in document) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "script>");
+</script>
+<!--<script src="{$Think.const.JS_URL}/typeahead-bs2.min.js"></script>-->
+<!-- page specific plugin scripts -->
+<!--[if lte IE 8]>
+<script src="{$Think.const.JS_URL}/excanvas.min.js"></script>
+<![endif]-->
+<script type="text/javascript">
+    if ("ontouchend" in document) document.write("<script src='{$Think.const.JS_URL}/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+</script>
+<script src="http://www.jq22.com/jquery/bootstrap-3.3.4.js"></script>
+<script src="{$Think.const.JS_URL}/typeahead-bs2.min.js"></script>
+<script src="{$Think.const.JS_URL}/date-time/bootstrap-datepicker.min.js"></script>
+<script src="{$Think.const.JS_URL}/date-time/bootstrap-timepicker.min.js"></script>
+<script src="{$Think.const.JS_URL}/date-time/moment.min.js"></script>
+<script src="{$Think.const.JS_URL}/date-time/daterangepicker.min.js"></script>
+<!-- page specific plugin scripts -->
+<script src="{$Think.const.JS_URL}/jquery.dataTables.min.js"></script>
+<!-- ace scripts -->
+<script src="{$Think.const.JS_URL}/ace-elements.min.js"></script>
+<script src="{$Think.const.JS_URL}/ace.min.js"></script>
+<!-- inline scripts related to this page -->
+<script type="text/javascript">
+    jQuery(function ($) {
+        $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+        var oTable1 = $('#sample-table-2').dataTable({
+            "aoColumns": [
+                {"bSortable": false},
+                null, null, null, null, null,
+                {"bSortable": false}
+            ]
+        });
+        $('table th input:checkbox').on('click', function () {
+            var that = this;
+            $(this).closest('table').find('tr > td:first-child input:checkbox')
+                .each(function () {
+                    this.checked = that.checked;
+                    $(this).closest('tr').toggleClass('selected');
+                });
+        });
+
+        $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
+
+        function tooltip_placement(context, source) {
+            var $source = $(source);
+            var $parent = $source.closest('table')
+            var off1 = $parent.offset();
+            var w1 = $parent.width();
+            var off2 = $source.offset();
+            var w2 = $source.width();
+            if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
+            return 'left';
+        }
+    })
+    function confirmadd() {
+
+    }
+</script>
+</body>
+</html>
